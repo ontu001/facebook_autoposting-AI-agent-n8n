@@ -1,0 +1,319 @@
+{
+  "name": "Rohanur Rahman Page Autopost",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "737de794-b60f-4c3d-81f0-40c66ca5ac67",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI",
+          "mode": "list",
+          "cachedResultName": "Rohanur Rahman Autoposting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "PENDING"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7275082a-d3dc-42c9-86b2-5bcc028143c8",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3O44WX5ddnutzqWq",
+          "name": "Google Sheets account 535"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "text": "Role:\nYou are an AI assistant that analyzes images and generates insightful, context-aware Bangla captions suitable for Facebook posts on a professional page about data analysis, artificial intelligence, and AI agent development.\n\nTask:\nGiven an input image, carefully analyze its contents (objects, mood, theme, and possible context).\nThen, generate a short, engaging Bangla caption that:\n\nMatches the theme of data analysis, AI, or technology\n\nFeels natural, modern, and thought-provoking to a Bangladeshi audience\n\nIs suitable for a Facebook post (1–2 sentences max)\n\nOptionally includes emojis to increase engagement\n\nAvoids hashtags, unless they are contextually relevant (e.g., #AI, #DataScience)\n\nAvoids robotic or repetitive tone\n\nStyle Examples:\n\nযদি ছবি বিশ্লেষণে দেখা যায় এটি চার্ট, ডেটা বা কোড সম্পর্কিত — ক্যাপশন হতে পারে অনুপ্রেরণামূলক, যেমন:\n“ডেটার গভীরে লুকিয়ে আছে ভবিষ্যতের সিদ্ধান্তের চাবিকাঠি 🔍📊”\n\nযদি ছবি AI বা রোবট সম্পর্কিত হয় — ক্যাপশন হতে পারে:\n“যেখানে মানুষ থামে, সেখানেই শুরু হয় কৃত্রিম বুদ্ধিমত্তার যাত্রা 🤖✨”\n\nযদি ছবি বিমূর্ত বা ধারণাভিত্তিক হয় — ক্যাপশন হতে পারে:\n“ডেটা শুধু সংখ্যা নয়, এটি বুদ্ধিমত্তার ভাষা। 💡📈”\n\nOutput Format:\nReturn only the final Bangla caption as plain text (no English explanation or additional notes).",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        0
+      ],
+      "id": "b896bc75-2ab8-48a3-8366-a80ab461d7bd",
+      "name": "Analyze an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DsSz42cuvmsU4Zvw",
+          "name": "Google Gemini(PaLM) Api account 267"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json['id/url'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        672,
+        0
+      ],
+      "id": "55a01326-53c1-4da4-b004-b7352073c4f1",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f03c1ce1-d836-413c-a167-23d7bd01f3d7",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI",
+          "mode": "list",
+          "cachedResultName": "Rohanur Rahman Autoposting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id/url": "={{ $('Limit').item.json['id/url'] }}",
+            "caption": "={{ $json.content.parts[0].text }}",
+            "status": "DONE"
+          },
+          "matchingColumns": [
+            "id/url"
+          ],
+          "schema": [
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id/url",
+              "displayName": "id/url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "upoad time",
+              "displayName": "upoad time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "b44ae346-ad34-4909-a43a-e62c0b8eb01d",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3O44WX5ddnutzqWq",
+          "name": "Google Sheets account 535"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v20.0/444/photos",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json['id/url'] }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.caption }}"
+            },
+            {
+              "name": "access_token",
+              "value": "111"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "44",
+      "name": "facebook post"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "facebook post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "44fdd03f-c677-4a31-aedd-ad4760d99396",
+  "meta": {
+    "instanceId": "8aa7a6b00703250dcbefcb510baac06d8bd02203b4f9c49a6f275db8e3adde34"
+  },
+  "id": "8OQZSpKLGcBZ1FL8",
+  "tags": []
+}

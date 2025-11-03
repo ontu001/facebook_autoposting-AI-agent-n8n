@@ -1,0 +1,381 @@
+{
+  "name": "Rohanur Rahman Autoposting DataBase",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -368,
+        -64
+      ],
+      "id": "66c63079-b3b7-43b1-a34b-9b621bdd1245",
+      "name": "Telegram Trigger",
+      "webhookId": "493cf5de-e79f-4884-ad17-8722622df51d",
+      "credentials": {
+        "telegramApi": {
+          "id": "39L9xrIrPwZEPUA5",
+          "name": "Rohanur rahman autoposting"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f8b3f3d-d1ed-4553-a35a-72cdffcf15ce",
+              "leftValue": "={{ $json.message.photo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        -64
+      ],
+      "id": "b87f5564-e43d-4eb4-9bd2-fb6df4f621fb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[3].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        -160
+      ],
+      "id": "01464c5a-13b3-4897-a4be-60dbbd1d74f0",
+      "name": "Get a file",
+      "webhookId": "e496679f-c3a1-480c-bc63-dba658128ab2",
+      "credentials": {
+        "telegramApi": {
+          "id": "39L9xrIrPwZEPUA5",
+          "name": "Rohanur rahman autoposting"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.imgbb.com/1/upload",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "91cecd43d8aaa51e52aecb97b111f23d"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image",
+              "value": "={{ $json.data }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        528,
+        -160
+      ],
+      "id": "e4361797-be5b-4b71-9126-4ad0e43cd38f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -160
+      ],
+      "id": "296ac969-10e0-4438-bd7c-6b893006f0ea",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "options": {
+          "timezone": "asia/dhaka"
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -160
+      ],
+      "id": "89a2f466-f96d-41f8-8ebb-0d98868f9818",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI",
+          "mode": "list",
+          "cachedResultName": "Rohanur Rahman Autoposting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HgOomn5U8AZyFFQWXQOu_614e6SHoelQQmrP2N7E5oI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id/url": "={{ $('HTTP Request').item.json.data.image.url }}",
+            "upoad time": "={{ $json.currentDate }}",
+            "status": "PENDING"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id/url",
+              "displayName": "id/url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "upoad time",
+              "displayName": "upoad time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        -160
+      ],
+      "id": "7f69c27e-4d9b-43e8-b87b-bd652ff75a22",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3O44WX5ddnutzqWq",
+          "name": "Google Sheets account 535"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Data Stored Successfully\n\n{{ $('HTTP Request').item.json.data.image.url }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -160
+      ],
+      "id": "37a0cf8a-d5b8-42fd-9d88-59dd23016e13",
+      "name": "Send a text message",
+      "webhookId": "d2ec7acc-3324-4415-9bc0-0cda14dc83a4",
+      "credentials": {
+        "telegramApi": {
+          "id": "39L9xrIrPwZEPUA5",
+          "name": "Rohanur rahman autoposting"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "Please Send an Image",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        32
+      ],
+      "id": "37749368-e30a-4137-baa0-ad9b13028622",
+      "name": "Send a text message1",
+      "webhookId": "da8d36b1-2714-4d60-85cf-f6fb9dd6c7cd",
+      "credentials": {
+        "telegramApi": {
+          "id": "39L9xrIrPwZEPUA5",
+          "name": "Rohanur rahman autoposting"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a7fb814b-caed-4322-9ac1-30c1f9f2a4c9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8aa7a6b00703250dcbefcb510baac06d8bd02203b4f9c49a6f275db8e3adde34"
+  },
+  "id": "uid6xThaLepGFVjE",
+  "tags": []
+}
